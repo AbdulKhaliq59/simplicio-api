@@ -3,8 +3,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import Authentication from './routes/Authentication.js';
-
+import AuthenticationRoute from './routes/Authentication.js'
+import churchRoutes from './routes/church.js'
 const app = express();
 
 app.use(bodyParser.json());
@@ -42,7 +42,8 @@ const options = {
 };
 const specs = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-app.use('/auth', Authentication);
+app.use('/auth', AuthenticationRoute);
+app.use('/church',churchRoutes)
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to simplicio API',
