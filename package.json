@@ -5,10 +5,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node --no-warnings ./src/index.js",
+    "start": "npm run build && node ./build/index.js",
     "dev": "nodemon --no-warnings ./src/index.js",
     "seedUsers": "node ./src/database/seeders/user.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./src",
+    "lint-fix":"eslint --fix ./src"
   },
   "author": "",
   "license": "ISC",
@@ -24,5 +26,10 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1"
   }
 }
