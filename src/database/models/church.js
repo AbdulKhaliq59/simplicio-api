@@ -13,6 +13,12 @@ const churchSchema = new mongoose.Schema({
   sloganMessage: {
     type: String,
   },
+  charityActions: {
+    type: [String],
+  },
+  logo: {
+    type: String,
+  },
   qrCodeData: {
     type: String,
   },
