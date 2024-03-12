@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 export const isAdmin = (req, res, next) => {
   const authorizationHeader = req.headers["authorization"];
-  console.log("Header", authorizationHeader);
   if (!authorizationHeader) {
     return res.status(401).json({
       error: "Unauthorized.",
