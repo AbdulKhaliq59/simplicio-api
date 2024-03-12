@@ -26,7 +26,8 @@ export const addChurch = async (req, res) => {
             error: "User does not exist",
           });
         }
-        if (userExist.role !== "manager" || userExist.role !== "admin") {
+
+        if (userExist.role === "normal") {
           return res.status(401).json({
             success: false,
             error: "Priviledge goes to admin or manager",
