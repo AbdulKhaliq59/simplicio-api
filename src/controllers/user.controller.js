@@ -7,7 +7,7 @@ dotenv.config();
 
 // Handle user signup
 export const signUp = async (req, res) => {
-  const { name, email, password, dateOfBirth, role } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
     // Check if the email is already in use
@@ -21,7 +21,6 @@ export const signUp = async (req, res) => {
       name,
       email,
       password: hashPassword,
-      dateOfBirth: new Date(dateOfBirth),
       role: role || "normal", // Default to 'normal' if role is not provided
     });
 

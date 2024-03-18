@@ -76,10 +76,6 @@
  *               password:
  *                 type: string
  *                 description: The password of the user
- *               dateOfBirth:
- *                 type: string
- *                 format: date
- *                 description: The date of birth of the user in YYYY-MM-DD format
  *               role:
  *                 type: string
  *                 enum: [superAdmin, admin, normal]
@@ -109,10 +105,6 @@
  *                     email:
  *                       type: string
  *                       description: The email address of the user
- *                     dateOfBirth:
- *                       type: string
- *                       format: date
- *                       description: The date of birth of the user in YYYY-MM-DD format
  *                     role:
  *                       type: string
  *                       enum: [superAdmin, admin, normal]
