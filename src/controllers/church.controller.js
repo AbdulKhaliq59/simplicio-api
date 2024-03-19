@@ -84,10 +84,23 @@ export const addChurch = async (req, res) => {
 
 export const getAllChurches = async (req, res) => {
   try {
-    const churches = await Church.find();
+    const churches = await Church.find().populate({
+      path: "userId",
+      select: "name", // Project only the 'name' field of the user
+    });
+
+    // Extract user names from populated user objects
+    const populatedChurches = churches.map((church) => ({
+      _id: church._id,
+      name: church.name,
+      sloganMessage: church.sloganMessage,
+      charityActions: church.charityActions,
+      Manager: church.userId ? church.userId.name : null,
+    }));
+
     return res.status(200).json({
       success: true,
-      churches: churches,
+      churches: populatedChurches,
     });
   } catch (error) {
     console.log("Error fetching All churches: ", error);
