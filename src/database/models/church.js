@@ -10,6 +10,10 @@ const churchSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  iban: {
+    type: String,
+    required: true,
+  },
   sloganMessage: {
     type: String,
   },

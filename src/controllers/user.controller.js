@@ -65,8 +65,8 @@ export const login = async (req, res) => {
 export const updateUserRole = async (req, res) => {
   try {
     const { userId } = req.params;
-    const  {role}  = req.body;
-    console.log(role)
+    const { role } = req.body;
+    console.log(role);
     if (!["admin", "manager", "normal"].includes(role)) {
       return res.status(400).json({
         success: false,
@@ -99,18 +99,38 @@ export const updateUserRole = async (req, res) => {
   }
 };
 
-export const getAllUsers =async(req,res)=>{
-try {
-  const users = await User.find();
-  return res.status(200).json({
-    success:true,
-    users
-  })
-} catch (error) {
-  console.error("Error getting all users:",error);
-  return res.status(500).json({
-    success:false,
-    error:"Internal Server error"
-  })
-}
-}
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.error("Error getting all users:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Internal Server error",
+    });
+  }
+};
+
+export const getAdminManagerUsers = async (req, res) => {
+  try {
+    const users = await User.find({
+      role: {
+        $in: ["admin", "manager"],
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.log("Error while getting All users", error);
+    return res.status(500).json({
+      success: false,
+      error: "Internal server error",
+    });
+  }
+};

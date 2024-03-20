@@ -9,7 +9,7 @@ export const addChurch = async (req, res) => {
   try {
     handleImageUpload(req, res, async function (err) {
       try {
-        const { userId, name, sloganMessage, charityActions } = req.body;
+        const { userId, name, sloganMessage, charityActions, iban } = req.body;
 
         if (!userId || !name) {
           return res.status(400).json({
@@ -39,6 +39,7 @@ export const addChurch = async (req, res) => {
           name,
           sloganMessage,
           charityActions,
+          iban,
         });
 
         // Check if an image file was uploaded
