@@ -7,9 +7,10 @@ import {
   updateChurch,
 } from "../controllers/church.controller.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
+import upload from "../utils/upload.js";
 const router = express.Router();
 
-router.post("/", isAdmin, addChurch);
+router.post("/", isAdmin, upload.single("logo"), addChurch);
 router.get("/", isAdmin, getAllChurches);
 router.get("/:churchId", getChurchById);
 router.put("/:churchId", updateChurch);

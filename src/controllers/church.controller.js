@@ -1,81 +1,70 @@
 import Church from "../database/models/church.js";
 import generateQRCode from "../utils/generateQRCode.js";
 import User from "../database/models/user.js";
-import upload from "../utils/upload.js";
-// Separate middleware for handling file uploads
-const handleImageUpload = upload.single("image");
+
 
 export const addChurch = async (req, res) => {
   try {
-    handleImageUpload(req, res, async function (err) {
-      try {
-        const { userId, name, sloganMessage, charityActions, iban } = req.body;
+    const { userId, name, sloganMessage, charityActions, iban } = req.body;
+    
+    if (!userId || !name) {
+      return res.status(400).json({
+        success: false,
+        error: "UserId and Name are required fields.",
+      });
+    }
 
-        if (!userId || !name) {
-          return res.status(400).json({
-            success: false,
-            error: "UserId and Name are required fields.",
-          });
-        }
-        const userExist = await User.findOne({
-          _id: userId,
-        });
-        if (!userExist) {
-          return res.status(404).json({
-            success: false,
-            error: "User does not exist",
-          });
-        }
+    const userExist = await User.findOne({ _id: userId });
+    if (!userExist) {
+      return res.status(404).json({
+        success: false,
+        error: "User does not exist",
+      });
+    }
 
-        if (userExist.role === "normal") {
-          return res.status(401).json({
-            success: false,
-            error: "Priviledge goes to admin or manager",
-          });
-        }
-        // Create a new church instance
-        const newChurch = new Church({
-          userId,
-          name,
-          sloganMessage,
-          charityActions,
-          iban,
-        });
+    if (userExist.role === "normal") {
+      return res.status(401).json({
+        success: false,
+        error: "Privilege goes to admin or manager",
+      });
+    }
 
-        // Check if an image file was uploaded
-        if (req.file) {
-          newChurch.logo = req.file.path;
-        }
+    // Create a new church instance
+    const newChurch = new Church({
+      userId,
+      name,
+      sloganMessage,
+      charityActions,
+      iban,
+    });
 
-        // Save the church to the database
-        const savedChurch = await newChurch.save();
+    // Check if an image file was uploaded
+    if (req.file) {
+      // Assuming multer middleware handles file upload and sets req.file
+      newChurch.logo = req.file.path; // Use req.file to get the path
+    }
 
-        // Generate a link to access the website of the created church
-        const churchWebsiteLink = `https://www.npmjs.com/package/bwip-js`;
+    // Save the church to the database
+    const savedChurch = await newChurch.save();
 
-        // Generate a QR code using the church ID and website link
-        const qrCode = await generateQRCode(savedChurch._id, churchWebsiteLink);
+    // Generate a link to access the website of the created church
+    const churchWebsiteLink = `https://www.npmjs.com/package/bwip-js`;
 
-        // Save the QR code data in the database
-        savedChurch.qrCodeData = qrCode.dataURI;
-        await savedChurch.save();
+    // Generate a QR code using the church ID and website link
+    const qrCode = await generateQRCode(savedChurch._id, churchWebsiteLink);
 
-        return res.status(201).json({
-          success: true,
-          church: savedChurch,
-          churchWebsiteLink,
-          qrCode: qrCode.dataURI,
-        });
-      } catch (error) {
-        console.error("Error creating or saving church:", error);
-        return res.status(500).json({
-          success: false,
-          error: "Internal server error",
-        });
-      }
+    // Save the QR code data in the database
+    savedChurch.qrCodeData = qrCode.dataURI;
+    await savedChurch.save();
+
+    return res.status(201).json({
+      success: true,
+      church: savedChurch,
+      churchWebsiteLink,
+      qrCode: qrCode.dataURI,
     });
   } catch (error) {
-    console.error("Error handling image upload:", error);
+    console.error("Error creating or saving church:", error);
     return res.status(500).json({
       success: false,
       error: "Internal server error",
