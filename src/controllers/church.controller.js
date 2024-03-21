@@ -2,11 +2,10 @@ import Church from "../database/models/church.js";
 import generateQRCode from "../utils/generateQRCode.js";
 import User from "../database/models/user.js";
 
-
 export const addChurch = async (req, res) => {
   try {
     const { userId, name, sloganMessage, charityActions, iban } = req.body;
-    
+
     if (!userId || !name) {
       return res.status(400).json({
         success: false,
@@ -104,7 +103,6 @@ export const getAllChurches = async (req, res) => {
 export const getChurchById = async (req, res) => {
   try {
     const { churchId } = req.params;
-
     const church = await Church.findById(churchId);
     if (!church) {
       return res.status(404).json({
@@ -112,9 +110,19 @@ export const getChurchById = async (req, res) => {
         error: "Church not found",
       });
     }
+    const user = await User.findById(church.userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: "User not found for this church",
+      });
+    }
     return res.status(200).json({
       success: true,
-      church: church,
+      church: {
+        ...church.toObject(),
+        user: user.toObject(),
+      },
     });
   } catch (error) {
     console.error("Error Fetching church:", error);
