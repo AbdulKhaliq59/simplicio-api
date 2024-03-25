@@ -88,7 +88,7 @@ export const updateUserRole = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      message: updateUser,
+      message: "Role Assigned Successfully",
     });
   } catch (error) {
     console.error("Error updating user role", error);
