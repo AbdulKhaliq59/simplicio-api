@@ -57,22 +57,20 @@ export const isAdminOrManager = (req, res, next) => {
 
 export const isAuthenticated = (req, res, next) => {
   const authorizationHeader = req.headers['authorization'];
-  if (!authorizationHeader) {
-    return res.status(401).json({
-      error: 'Unauthorized. No token provided.',
-    });
-  }
 
-  const token = authorizationHeader.replace('Bearer ', '');
-  try {
-    const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
-    req.user = decodedToken; // Attach decoded token data to the request
-    console.log("decoded User", req.user);
-
-    next();
-  } catch (error) {
-    res.status(401).json({
-      error: 'Unauthorized. Invalid token.',
-    });
+  // If token exists, verify and attach user info to the request
+  if (authorizationHeader) {
+    const token = authorizationHeader.replace('Bearer ', '');
+    try {
+      const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+      req.user = decodedToken; // Attach decoded token data to the request
+      console.log("Authenticated user:", req.user);
+    } catch (error) {
+      return res.status(401).json({
+        error: 'Unauthorized. Invalid token.',
+      });
+    }
   }
+  next(); // Proceed regardless of token presence
 };
+
